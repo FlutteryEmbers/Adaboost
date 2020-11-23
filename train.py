@@ -9,6 +9,8 @@ input_folder = './train_set/feature/'
 output_folder = './model/'
 rounds = 5
 
+datasize = 2499
+
 def get_decision_stump(data, d):
     train_set = copy.deepcopy(data)
     F_star = float("inf")
@@ -52,7 +54,7 @@ def update_weights(data, theta_star, j_star, dist):
         weighted_err += miss * d[i] 
         validate.append(label*train_data[i][-1])
         correct.append(miss)
-    print("error in this round:", weighted_err)
+    print("weighted error in this round:", weighted_err)
     a = np.float128(np.log(1 / weighted_err - 1) / 2)
     print("amount of say in this round: ", a)
 
@@ -69,7 +71,7 @@ def update_weights(data, theta_star, j_star, dist):
     '''
 
     normalize_factor = sum(weights)
-    normalized_weights = [ weight / normalize_factor for weight in weights]
+    normalized_weights = [weight / normalize_factor for weight in weights]
     
     '''
     print(normalize_factor)
@@ -92,10 +94,10 @@ feature_selected = []
 amount_says = []
 theta_stars = []
 dist = []
-for i in range(2499):
+for i in range(datasize):
     row = utils.load_csv(input_folder + str(i) +'.csv')[0]
     train_data.append(row)
-    dist.append(1/2499)
+    dist.append(1/datasize)
 print("load cost: " , time.perf_counter()-t, "s")
 
 

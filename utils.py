@@ -92,7 +92,6 @@ def get_feature_value(data, feature):
     if feature[0] == 1:
         if w%2 != 0:
             print('error in feature type 1')
-            print(j)
         black = data[y+h][x+w] + data[y][x+int(w/2)] - data[y][x+w] - data[y+h][x+int(w/2)]
         white = data[y+h][x+int(w/2)] + data[y][x] - data[y+h][x] - data[y][x+int(w/2)]
         value = black - white
@@ -100,7 +99,6 @@ def get_feature_value(data, feature):
     elif feature[0] == 2:
         if h%2 != 0:
             print('error in feature type 2')
-            print(j)
         black = data[y+int(h/2)][x+w] + data[y][x] - data[y][x+w] - data[y+int(h/2)][x]
         white = data[y+h][x+w] + data[y+int(h/2)][x] - data[y+int(h/2)][x+w] - data[y+h][x]
         value = black - white
@@ -108,26 +106,47 @@ def get_feature_value(data, feature):
     elif feature[0] == 3:
         if w%3 != 0:
             print('error in feature type 3')
-            print(j)
         black = data[y+h][x+int(2*w/3)] + data[y][x+int(w/3)] - data[y+h][x+int(w/3)] - data[y][x+int(2*w/3)]
         white1 = data[y+h][x+int(w/3)] + data[y][x] - data[y+h][x] - data[y][x+int(w/3)]
         white2 = data[y+h][x+w] + data[y][x+int(2*w/3)] - data[y][x+w] - data[y+h][x+int(2*w/3)]
         # value = black - (white1 + white2)
-        value = white1 + white2 - black
+        value = black - (white1 + white2) 
     
     elif feature[0] == 4:
         if h%2 != 0 or w%2 != 0:
             print('error in feature type 4')
-            print(j)
         black1 = data[y+int(h/2)][x+w] + data[y][x+int(w/2)] - data[y][x+w] - data[y+int(h/2)][x+int(w/2)]
         black2 = data[y+h][x+int(w/2)] + data[y+int(h/2)][x] - data[y+h][x] - data[y+int(h/2)][x+int(w/2)]
         white1 = data[y+int(h/2)][x+int(w/2)] + data[y][x] - data[y][x+int(w/2)] - data[y+int(h/2)][x]
         white2 = data[y+int(h/2)][x+int(w/2)] + data[y+h][x+w] - data[y+int(h/2)][x+w] - data[y+h][x+int(w/2)]
         # value = (black1 + black2) - (white1 + white2)
         value = (white1+white2) - (black1 + black2)
-
+        
     else:
         print('err')
+        
+    '''
+    elif feature[0] == 5: #reverse type 3
+        if w%3 != 0:
+            print('error in feature type 3')
+        black = data[y+h][x+int(2*w/3)] + data[y][x+int(w/3)] - data[y+h][x+int(w/3)] - data[y][x+int(2*w/3)]
+        white1 = data[y+h][x+int(w/3)] + data[y][x] - data[y+h][x] - data[y][x+int(w/3)]
+        white2 = data[y+h][x+w] + data[y][x+int(2*w/3)] - data[y][x+w] - data[y+h][x+int(2*w/3)]
+        # value = black - (white1 + white2)
+        value =  black - (white1 + white2)
+
+    elif feature[0] == 6: #reverse type 4
+        if h%2 != 0 or w%2 != 0:
+            print('error in feature type 4')
+        black1 = data[y+int(h/2)][x+w] + data[y][x+int(w/2)] - data[y][x+w] - data[y+int(h/2)][x+int(w/2)]
+        black2 = data[y+h][x+int(w/2)] + data[y+int(h/2)][x] - data[y+h][x] - data[y+int(h/2)][x+int(w/2)]
+        white1 = data[y+int(h/2)][x+int(w/2)] + data[y][x] - data[y][x+int(w/2)] - data[y+int(h/2)][x]
+        white2 = data[y+int(h/2)][x+int(w/2)] + data[y+h][x+w] - data[y+int(h/2)][x+w] - data[y+h][x+int(w/2)]
+        # value = (black1 + black2) - (white1 + white2)
+        value =  (black1 + black2) - (white1+white2)
+    '''
+
+    
 
     return value
 

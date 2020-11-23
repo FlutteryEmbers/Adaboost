@@ -2,6 +2,7 @@
 import copy
 import csv
 import utils
+
 features = [] #element in features is [type: 1-4, Width, Height, Upper Left Corner Location X, Upper Left Corner Location Y]
 width = 0
 height = 0
@@ -37,6 +38,7 @@ for x in range(0, 19):
             for h in range(1, 19):
                 if w % 2 == 0 and h % 2 == 0 and (x + w) < 19 and (y + h) < 19:
                     features.append([4, w, h, x, y])
+
 
 print(len(features))
 # print(features)
