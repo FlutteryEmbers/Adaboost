@@ -3,6 +3,7 @@ import copy
 import csv
 import utils
 
+print("create feature databases...")
 features = [] #element in features is [type: 1-4, Width, Height, Upper Left Corner Location X, Upper Left Corner Location Y]
 width = 0
 height = 0
@@ -47,4 +48,4 @@ with open('features' + str(len(features)) + ".csv","w+") as f:
         csvWriter = csv.writer(f, delimiter=',')
         csvWriter.writerows(features)
 '''
-utils.save_csv('features.csv', features)
+utils.save_csv(utils.path + "/../features.csv", features)

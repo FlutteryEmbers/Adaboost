@@ -2,6 +2,11 @@
 import csv
 import numpy as np
 import cv2
+import os
+
+path = os.path.dirname(os.path.realpath(__file__))
+chuck_size = 1000
+train_data_size = 2499
 
 def save_csv(file_name, data):
     with open(file_name ,"w+") as f:

@@ -3,10 +3,13 @@ import cv2
 import numpy as np
 import csv
 import copy
+import utils
 
-face_image_folder = "./VJ_dataset/trainset/faces/"
-no_face_image_folder = "./VJ_dataset/trainset/non-faces/"
-output_folder = "./train_set/data/"
+print("generate test set...")
+face_image_folder = utils.path + "/../VJ_dataset/testset/faces/"
+no_face_image_folder = utils.path + "/../VJ_dataset/testset/non-faces/"
+output_folder = utils.path + "/../test_set/"
+seq = 0
 
 face_file_prefix = 'face'
 non_face_file_prefix_1 = 'B1_'
@@ -64,36 +67,26 @@ def Integral_Image(mode, img_name):
     f.close()
 
 if __name__ == "__main__":
-    for i in range(1, 500):
+    # This is a block of code to generate testset data
+    for i in range(472):
         # print(i)
         serial = ""
-        for j in range(5 - len(str(i))):
+        for j in range(4 - len(str(i))):
             serial += "0"
         serial += str(i)
-        Integral_Image(0, face_file_prefix + serial)
-        seq += 1
-    
-    for i in range(1, 560):
-        serial = ""
-        for j in range(5 - len(str(i))):
-            serial += "0"
-        serial += str(i)
-        Integral_Image(1, non_face_file_prefix_1 + serial)
-        seq += 1
-    
-    for i in range(341):
-        serial = ""
-        for j in range(5 - len(str(i))):
-            serial += "0"
-        serial += str(i)
-        Integral_Image(1, non_face_file_prefix_2 + serial)
+        Integral_Image(0, test_image_prefix + serial)
         seq += 1
 
-    for i in range(1507, 2607):
+    for i in range(19572):
+        # print(i)
         serial = ""
-        for j in range(5 - len(str(i))):
-            serial += "0"
+        if i < 1000:
+            for j in range(4 - len(str(i))):
+                serial += "0"
+        # print(test_image_prefix + serial)
         serial += str(i)
-        Integral_Image(1, non_face_file_prefix_3 + serial)
+        Integral_Image(1, test_image_prefix + serial)
         seq += 1
     
+
+
