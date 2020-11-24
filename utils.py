@@ -20,15 +20,6 @@ def load_csv(str):
         data_set.append(x_i)
     return data_set
 
-def load_model(selected):
-    model = load_csv_float('./model/'+ str(selected) +'/detail.csv')
-    amount_of_say = model[-1]
-    theta_stars = model[-2]
-    features = []
-    for i in range(selected):
-        features.append([int(x) for x in model[i]])
-    return [features, amount_of_say, theta_stars]
-
 def load_csv_float(str):
     with open(str, newline='') as csvfile:
         data = list(csv.reader(csvfile))
@@ -40,15 +31,26 @@ def load_csv_float(str):
         data_set.append(x_i)
     return data_set
 
+def load_model(selected):
+    model = load_csv_float('./model/'+ str(selected) +'/detail.csv')
+    amount_of_say = model[-1]
+    theta_stars = model[-2]
+    reverse = model[-3]
+    features = []
+    for i in range(selected):
+        features.append([int(x) for x in model[i]])
+    return [features, amount_of_say, theta_stars, reverse]
+
 def get_label_from_model(data, model):
     features = model[0]
     amount_of_say = model[1]
     theta_stars = model[2]
+    reverse = model[3]
 
     s = 0
     for i in range(len(features)):
         value = get_feature_value(data, features[i])
-        s += amount_of_say[i] * np.sign(theta_stars[i] - value)
+        s += amount_of_say[i] * reverse[i] * np.sign(theta_stars[i] - value)
 
     return np.sign(s) 
 
@@ -56,7 +58,7 @@ def showfeature(num):
     features = load_csv('features.csv')
     print(features[num])
 
-def drawfeature(folder, round, feature):
+def drawfeature(folder, round, feature, reverse):
     img = cv2.imread('./VJ_dataset/trainset/faces/face00001.png', cv2.IMREAD_GRAYSCALE)
     w = feature[1]
     h = feature[2]
@@ -81,7 +83,12 @@ def drawfeature(folder, round, feature):
     color = (0, 0, 255)
     thickness = 0
     img = cv2.rectangle(img, start_point, end_point, color, thickness)
-    cv2.imwrite(folder + str(round) + '_type_' + str(feature[0]) + '.png',img)
+
+    suffix = ""
+    if reverse == -1:
+        suffix = "reversed"
+
+    cv2.imwrite(folder + 'round_' + str(round) + '_type_' + str(feature[0]) + '_' + suffix + '.png',img)
 
 def get_feature_value(data, feature):
     value = 0
@@ -110,7 +117,7 @@ def get_feature_value(data, feature):
         white1 = data[y+h][x+int(w/3)] + data[y][x] - data[y+h][x] - data[y][x+int(w/3)]
         white2 = data[y+h][x+w] + data[y][x+int(2*w/3)] - data[y][x+w] - data[y+h][x+int(2*w/3)]
         # value = black - (white1 + white2)
-        value = black - (white1 + white2) 
+        value = (white1 + white2) - black 
     
     elif feature[0] == 4:
         if h%2 != 0 or w%2 != 0:
@@ -119,8 +126,8 @@ def get_feature_value(data, feature):
         black2 = data[y+h][x+int(w/2)] + data[y+int(h/2)][x] - data[y+h][x] - data[y+int(h/2)][x+int(w/2)]
         white1 = data[y+int(h/2)][x+int(w/2)] + data[y][x] - data[y][x+int(w/2)] - data[y+int(h/2)][x]
         white2 = data[y+int(h/2)][x+int(w/2)] + data[y+h][x+w] - data[y+int(h/2)][x+w] - data[y+h][x+int(w/2)]
-        # value = (black1 + black2) - (white1 + white2)
-        value = (white1+white2) - (black1 + black2)
+        value = (black1 + black2) - (white1 + white2)
+        # value = (white1+white2) - (black1 + black2)
         
     else:
         print('err')

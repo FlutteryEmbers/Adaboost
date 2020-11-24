@@ -39,7 +39,7 @@ def Integral_Image(mode, img_name):
         arr = []
         for j in range(19):
             arr.append(0)
-        s.append(arr)
+        s.append(arr[:])
 
     s[0][0] = image[0][0]
 
