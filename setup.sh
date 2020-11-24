@@ -11,3 +11,5 @@ mkdir 1
 mkdir 3
 mkdir 5
 mkdir 10
+python3.7 integral_testset_image.py
+python3.7 integral_trainset_image.py
