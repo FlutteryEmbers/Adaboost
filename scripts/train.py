@@ -89,7 +89,7 @@ def get_decision_stump(dis):
 
 def update_weights(theta_star, j_star, reverse, dist):
     d = copy.deepcopy(dist)
-    train_data = load_train_set(j_star // utils.chuck_size, y, d)
+    train_data = load_train_set(j_star // utils.chuck_size, labels[:], d)
     j_star = j_star % utils.chuck_size
     weighted_err = 0
     validate = []
