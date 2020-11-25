@@ -5,7 +5,7 @@ import copy
 import math
 import numpy as np
 
-rounds = 10
+rounds = 5
 datasize = 2499
 
 input_folder = utils.path + '/../train_set/feature/'
@@ -13,7 +13,7 @@ output_folder = utils.path + '/../model/'
 
 
 features = utils.load_csv(utils.path + '/../features.csv')
-labels = utils.load_csv(utils.path + '/../train_set/feature/labels.csv')
+labels = utils.load_csv(utils.path + '/../train_set/feature/labels.csv')[0]
 num_features = len(features)
 
 feature_selected = []
@@ -30,11 +30,12 @@ def get_decision_stump(dis):
     theta_star = 0
     reverse = 1
 
-    train_set = utils.load_csv(input_folder + str(j) +'.csv')[0]
+    # train_set = utils.load_csv(input_folder + str(j) +'.csv')[0]
     chuck_proccessed = 0
     while chuck_proccessed < num_features:
         size = min(num_features - chuck_proccessed, utils.chuck_size)
         train_set = load_train_set(chuck_proccessed, y[:], d[:])
+        # print('processing', chuck_proccessed)
         for j in range(size):
             train_set.sort(key=lambda element: element[j])
             F = 0
@@ -46,10 +47,12 @@ def get_decision_stump(dis):
                 F_star = F
                 theta_star = train_set[0][j] - 1
                 j_star = j + chuck_proccessed
+                reverse = 1
 
             for i in range(len(train_set)):
                 F = F - train_set[i][-2] * train_set[i][-1]
                 if F < F_star:
+                    reverse = 1
                     F_star = F
                     if i == len(train_set):
                         if train_set[i][j] != train_set[i+1][j]:
@@ -89,7 +92,7 @@ def get_decision_stump(dis):
 
 def update_weights(theta_star, j_star, reverse, dist):
     d = copy.deepcopy(dist)
-    train_data = load_train_set(j_star // utils.chuck_size, labels[:], d)
+    train_data = load_train_set((j_star // utils.chuck_size) * utils.chuck_size, labels[:], d)
     j_star = j_star % utils.chuck_size
     weighted_err = 0
     validate = []
@@ -147,6 +150,8 @@ def load_train_set(index, y, d):
         row.append(y[i])
         row.append(d[i])
         train_set.append(row[:])
+
+    # print("train_set:", index, len(train_set), train_set[0][-1], train_set[0][-2])
     return train_set
 
 dist = []

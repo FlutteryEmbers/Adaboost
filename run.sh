@@ -1,2 +1,2 @@
 #!/bin/sh
-python3.7 ./scripts/train.py
+python3 ./scripts/train.py

@@ -17,7 +17,8 @@ output_folder = utils.path + "/../train_set/feature/"
 train_data = []
 
 num_proccessed = 0
-while num_proccessed < num_features: 
+while num_proccessed < num_features:
+    print('chuck', num_proccessed) 
     to_do = min(utils.chuck_size, num_features - num_proccessed)
     save_data = []
 
@@ -30,6 +31,9 @@ while num_proccessed < num_features:
             data = utils.load_csv(data_folder + str(i) + ".csv")
             value = utils.get_feature_value(data, feature)
             save_data[j].append(value)
+
+    print(len(save_data))
+    print(len(save_data[0]))
      
     utils.save_csv(output_folder + str(num_proccessed)+'.csv', save_data)
     num_proccessed += to_do

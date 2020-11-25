@@ -5,7 +5,7 @@ import cv2
 import os
 
 path = os.path.dirname(os.path.realpath(__file__))
-chuck_size = 1000
+chuck_size = 500
 train_data_size = 2499
 
 def save_csv(file_name, data):
