@@ -3,10 +3,16 @@ import csv
 import numpy as np
 import cv2
 import os
+import copy
+import const
 
 path = os.path.dirname(os.path.realpath(__file__))
 chuck_size = 500
 train_data_size = 2499
+
+face_image_folder = ""
+no_face_image_folder = ""
+output_folder = ""
 
 def save_csv(file_name, data):
     with open(file_name ,"w+") as f:
@@ -137,32 +143,58 @@ def get_feature_value(data, feature):
     else:
         print('err')
         
-    '''
-    elif feature[0] == 5: #reverse type 3
-        if w%3 != 0:
-            print('error in feature type 3')
-        black = data[y+h][x+int(2*w/3)] + data[y][x+int(w/3)] - data[y+h][x+int(w/3)] - data[y][x+int(2*w/3)]
-        white1 = data[y+h][x+int(w/3)] + data[y][x] - data[y+h][x] - data[y][x+int(w/3)]
-        white2 = data[y+h][x+w] + data[y][x+int(2*w/3)] - data[y][x+w] - data[y+h][x+int(2*w/3)]
-        # value = black - (white1 + white2)
-        value =  black - (white1 + white2)
-
-    elif feature[0] == 6: #reverse type 4
-        if h%2 != 0 or w%2 != 0:
-            print('error in feature type 4')
-        black1 = data[y+int(h/2)][x+w] + data[y][x+int(w/2)] - data[y][x+w] - data[y+int(h/2)][x+int(w/2)]
-        black2 = data[y+h][x+int(w/2)] + data[y+int(h/2)][x] - data[y+h][x] - data[y+int(h/2)][x+int(w/2)]
-        white1 = data[y+int(h/2)][x+int(w/2)] + data[y][x] - data[y][x+int(w/2)] - data[y+int(h/2)][x]
-        white2 = data[y+int(h/2)][x+int(w/2)] + data[y+h][x+w] - data[y+int(h/2)][x+w] - data[y+h][x+int(w/2)]
-        # value = (black1 + black2) - (white1 + white2)
-        value =  (black1 + black2) - (white1+white2)
-    '''
-
-    
-
     return value
 
+def save_integral_image(imgFile, img_type, output):
+    img = cv2.imread(imgFile, cv2.IMREAD_GRAYSCALE)
+    image = []
+    for i in range(19):
+        arr = []
+        for j in range(19):
+            arr.append(np.int64(img[i][j]))
+        image.append(copy.deepcopy(arr))
 
+    s = []
+    for i in range(19):
+        arr = []
+        for j in range(19):
+            arr.append(0)
+        s.append(arr[:])
+
+    s[0][0] = image[0][0]
+
+    for i in range(1, 19):
+        s[0][i] = image[0][i] + s[0][i-1]
+        s[i][0] = image[i][0] + s[i-1][0]
+        
+    for i in range(1, 19):
+        for j in range(1, 19):
+            s[i][j] = s[i-1][j] + s[i][j-1] - s[i-1][j-1] + image[i][j]
+    
+    s.append([img_type])
+
+    '''
+    with open(data_folder + img_name + ".csv","w+") as f:
+        csvWriter = csv.writer(f, delimiter=',')
+        csvWriter.writerows(s)
+    '''
+
+    with open(output ,"w+") as f:
+        csvWriter = csv.writer(f, delimiter=',')
+        csvWriter.writerows(s)
+
+    f.close()
+
+def integral_image(mode, img_name, seq):
+    image_folder = face_image_folder
+
+    if mode == const.TYPE_NONFACE:
+        image_folder = no_face_image_folder
+
+    #print(image_folder + img_name)
+    imgFile = image_folder + img_name + ".png"
+    output = output_folder + str(seq) + ".csv"
+    save_integral_image(imgFile, mode, output)
 
 
 
