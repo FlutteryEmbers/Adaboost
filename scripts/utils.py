@@ -101,7 +101,7 @@ def drawfeature(folder, round, feature, reverse):
 
     cv2.imwrite(folder + 'round_' + str(round) + '_type_' + str(feature[0]) + '_' + suffix + '.png',img)
 
-def get_feature_value(data, feature):
+def get_feature_value(data, sdata, feature):
     value = 0
     w = feature[1]
     h = feature[2]
@@ -112,14 +112,46 @@ def get_feature_value(data, feature):
             print('error in feature type 1')
         black = data[y+h][x+w] + data[y][x+int(w/2)] - data[y][x+w] - data[y+h][x+int(w/2)]
         white = data[y+h][x+int(w/2)] + data[y][x] - data[y+h][x] - data[y][x+int(w/2)]
-        value = black - white
+
+        sblack = sdata[y+h][x+w] + sdata[y][x+int(w/2)] - sdata[y][x+w] - sdata[y+h][x+int(w/2)]
+        swhite = sdata[y+h][x+int(w/2)] + sdata[y][x] - sdata[y+h][x] - sdata[y][x+int(w/2)]
+
+        mblack = black / (w * h / 2)
+        mwhite = white / (w * h / 2)
+
+        msblack = sblack/(w * h / 2)
+        mswhite = swhite /(w * h / 2)
+
+        try:
+            nblack = black / np.sqrt(msblack - mblack * mblack)
+            nwhite = white / np.sqrt(mswhite - mwhite * mwhite)
+        except ZeroDivisionError:
+            print( "divide by zero", feature)
+
+        value = nblack - nwhite
 
     elif feature[0] == 2:
         if h%2 != 0:
             print('error in feature type 2')
         black = data[y+int(h/2)][x+w] + data[y][x] - data[y][x+w] - data[y+int(h/2)][x]
         white = data[y+h][x+w] + data[y+int(h/2)][x] - data[y+int(h/2)][x+w] - data[y+h][x]
-        value = black - white
+
+        sblack = sdata[y+int(h/2)][x+w] + sdata[y][x] - sdata[y][x+w] - sdata[y+int(h/2)][x]
+        swhite = sdata[y+h][x+w] + sdata[y+int(h/2)][x] - sdata[y+int(h/2)][x+w] - sdata[y+h][x]
+
+        mblack = black / (w * h / 2)
+        mwhite = white / (w * h / 2)
+
+        msblack = sblack/(w * h / 2)
+        mswhite = swhite /(w * h / 2)
+
+        try:
+            nblack = black / np.sqrt(msblack - mblack * mblack)
+            nwhite = white / np.sqrt(mswhite - mwhite * mwhite)
+        except ZeroDivisionError:
+            print( "divide by zero", feature)
+
+        value = nblack - nwhite
     
     elif feature[0] == 3:
         if w%3 != 0:
@@ -128,7 +160,28 @@ def get_feature_value(data, feature):
         white1 = data[y+h][x+int(w/3)] + data[y][x] - data[y+h][x] - data[y][x+int(w/3)]
         white2 = data[y+h][x+w] + data[y][x+int(2*w/3)] - data[y][x+w] - data[y+h][x+int(2*w/3)]
         # value = black - (white1 + white2)
-        value = (white1 + white2) - black 
+
+        sblack = sdata[y+h][x+int(2*w/3)] + sdata[y][x+int(w/3)] - sdata[y+h][x+int(w/3)] - sdata[y][x+int(2*w/3)]
+        swhite1 = sdata[y+h][x+int(w/3)] + sdata[y][x] - sdata[y+h][x] - sdata[y][x+int(w/3)]
+        swhite2 = sdata[y+h][x+w] + sdata[y][x+int(2*w/3)] - sdata[y][x+w] - sdata[y+h][x+int(2*w/3)]
+
+        mblack = black / (w * h / 3)
+        mwhite1 = white1 / (w * h / 3)
+        mwhite2 = white2 / (w * h / 3)
+
+        msblack = sblack/(w * h / 3)
+        mswhite1 = swhite1 /(w * h / 3)
+        mswhite2 = swhite2 /(w * h / 3)
+
+
+        try:
+            nblack = black / np.sqrt(msblack - mblack * mblack)
+            nwhite1 = white1 / np.sqrt(mswhite1 - mwhite1 * mwhite1)
+            nwhite2 = white2 / np.sqrt(mswhite2 - mwhite2 * mwhite2)
+        except ZeroDivisionError:
+            print( "divide by zero", feature)
+
+        value = (nwhite1 + nwhite2) - nblack 
     
     elif feature[0] == 4:
         if h%2 != 0 or w%2 != 0:
@@ -137,12 +190,36 @@ def get_feature_value(data, feature):
         black2 = data[y+h][x+int(w/2)] + data[y+int(h/2)][x] - data[y+h][x] - data[y+int(h/2)][x+int(w/2)]
         white1 = data[y+int(h/2)][x+int(w/2)] + data[y][x] - data[y][x+int(w/2)] - data[y+int(h/2)][x]
         white2 = data[y+int(h/2)][x+int(w/2)] + data[y+h][x+w] - data[y+int(h/2)][x+w] - data[y+h][x+int(w/2)]
-        value = (black1 + black2) - (white1 + white2)
+
+        sblack1 = sdata[y+int(h/2)][x+w] + sdata[y][x+int(w/2)] - sdata[y][x+w] - sdata[y+int(h/2)][x+int(w/2)]
+        sblack2 = sdata[y+h][x+int(w/2)] + sdata[y+int(h/2)][x] - sdata[y+h][x] - sdata[y+int(h/2)][x+int(w/2)]
+        swhite1 = sdata[y+int(h/2)][x+int(w/2)] + sdata[y][x] - sdata[y][x+int(w/2)] - sdata[y+int(h/2)][x]
+        swhite2 = sdata[y+int(h/2)][x+int(w/2)] + sdata[y+h][x+w] - sdata[y+int(h/2)][x+w] - sdata[y+h][x+int(w/2)]
+
+        mblack1 = black1 / (w * h / 4)
+        mblack2 = black2 / (w * h / 4)
+        mwhite1 = white1 / (w * h / 4)
+        mwhite2 = white2 / (w * h / 4)
+
+        msblack1 = sblack1/(w * h / 4)
+        msblack2 = sblack2/(w * h / 4)
+        mswhite1 = swhite1 /(w * h / 4)
+        mswhite2 = swhite2 /(w * h / 4)
+
+        try:
+            nblack1 = black1 / np.sqrt(msblack1 - mblack1 * mblack1)
+            nblack2 = black2 / np.sqrt(msblack2 - mblack2 * mblack2)
+            nwhite1 = white1 / np.sqrt(mswhite1 - mwhite1 * mwhite1)
+            nwhite2 = white2 / np.sqrt(mswhite2 - mwhite2 * mwhite2)
+        except ZeroDivisionError:
+            print( "divide by zero", feature)
+
+        value = (nblack1 + nblack2) - (nwhite1 + nwhite2)
         # value = (white1+white2) - (black1 + black2)
         
     else:
         print('err')
-        
+
     return value
 
 def save_integral_image(imgFile, img_type, output):
@@ -173,15 +250,43 @@ def save_integral_image(imgFile, img_type, output):
     
     s.append([img_type])
 
-    '''
-    with open(data_folder + img_name + ".csv","w+") as f:
-        csvWriter = csv.writer(f, delimiter=',')
-        csvWriter.writerows(s)
-    '''
-
     with open(output ,"w+") as f:
         csvWriter = csv.writer(f, delimiter=',')
         csvWriter.writerows(s)
+
+    f.close()
+
+def save_squared_integral_image(imgFile, img_type, output):
+    img = cv2.imread(imgFile, cv2.IMREAD_GRAYSCALE)
+    image = []
+    for i in range(19):
+        arr = []
+        for j in range(19):
+            arr.append(np.int64(img[i][j]))
+        image.append(copy.deepcopy(arr))
+
+    ss = []
+    for i in range(19):
+        arr = []
+        for j in range(19):
+            arr.append(0)
+        ss.append(copy.deepcopy(arr[:]))
+
+    ss[0][0] = image[0][0] * image[0][0]
+
+    for i in range(1, 19):
+        ss[0][i] = image[0][i] * image[0][i] + ss[0][i-1]
+        ss[i][0] = image[i][0] * image[i][0] + ss[i-1][0]
+        
+    for i in range(1, 19):
+        for j in range(1, 19):
+            ss[i][j] = ss[i-1][j] + ss[i][j-1] - ss[i-1][j-1] + image[i][j] * image[i][j]
+    
+    ss.append([img_type])
+
+    with open(output ,"w+") as f:
+        csvWriter = csv.writer(f, delimiter=',')
+        csvWriter.writerows(ss)
 
     f.close()
 
@@ -195,6 +300,10 @@ def integral_image(mode, img_name, seq):
     imgFile = image_folder + img_name + ".png"
     output = output_folder + str(seq) + ".csv"
     save_integral_image(imgFile, mode, output)
+
+    imgFile = image_folder + img_name + ".png"
+    output = output_folder + 's' + str(seq) + ".csv"
+    save_squared_integral_image(imgFile, mode, output)
 
 
 

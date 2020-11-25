@@ -29,7 +29,8 @@ while num_proccessed < num_features:
         for j in range(to_do):
             feature = features[num_proccessed + j]
             data = utils.load_csv(data_folder + str(i) + ".csv")
-            value = utils.get_feature_value(data, feature)
+            sdata = utils.load_csv(data_folder + 's' + str(i) + ".csv")
+            value = utils.get_feature_value(data, sdata, feature)
             save_data[j].append(value)
 
     print(len(save_data))
