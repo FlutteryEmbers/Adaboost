@@ -5,7 +5,7 @@ import copy
 import math
 import numpy as np
 
-rounds = 5
+rounds = 3
 datasize = 2499
 
 input_folder = utils.path + '/../train_set/feature/'
