@@ -28,6 +28,7 @@ while num_proccessed < num_features:
     for i in range(utils.train_data_size):
         for j in range(to_do):
             feature = features[num_proccessed + j]
+            # print(i)
             data = utils.load_csv(data_folder + str(i) + ".csv")
             sdata = utils.load_csv(data_folder + 's' + str(i) + ".csv")
             value = utils.get_feature_value(data, sdata, feature)

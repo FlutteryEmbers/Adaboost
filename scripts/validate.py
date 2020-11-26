@@ -1,11 +1,11 @@
 #! /usr/bin/python
 import utils
 
-selected = 10
-test_set_dir = './test_set/'
+selected = 5
+test_set_dir = utils.path + '/../test_set/'
 test_data_size = 20043
 
-train_set_dir = "./train_set/data/"
+train_set_dir = utils.path + "/../train_set/data/"
 train_data_size = 2499
 
 model = utils.load_model(selected)
@@ -17,7 +17,8 @@ postive_err = 0
 negative_err = 0
 for i in range(train_data_size):
     data = utils.load_csv(train_set_dir + str(i) + ".csv")
-    label = utils.get_label_from_model(data, model)
+    sdata = utils.load_csv(train_set_dir + 's' + str(i) + ".csv")
+    label = utils.get_label_from_model(data, sdata, model)
     if label != data[19][0]:
         if data[19][0] == 1:
             postive_err += 1
@@ -36,7 +37,8 @@ falseImage = []
 
 for i in range(test_data_size):
     data = utils.load_csv(test_set_dir + str(i) + ".csv")
-    label = utils.get_label_from_model(data, model)
+    sdata = utils.load_csv(test_set_dir + 's' + str(i) + ".csv")
+    label = utils.get_label_from_model(data, sdata, model)
 
     if label == 1:
         positives += 1
@@ -52,6 +54,4 @@ for i in range(test_data_size):
 
 print('=====test_set=====')
 print('false positive:', postive_err, 'false positive rate:', postive_err/472)
-print('false nagative:', negative_err, 'false nagative rate:', negative_err/1951)
-print(positives, negatives)
-print(falseImage[:10])
+print('false nagative:', negative_err, 'false nagative rate:', negative_err/19751)

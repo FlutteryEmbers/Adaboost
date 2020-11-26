@@ -141,12 +141,15 @@ def update_weights(theta_star, j_star, reverse, dist):
     return a, normalized_weights
 
 def load_train_set(index, y, d):
-    x = utils.load_csv(utils.path + "/../train_set/feature/" + str(index) + ".csv")
+    x = utils.load_csv_float(utils.path + "/../train_set/feature/" + str(index) + ".csv")
     train_set = []
     for i in range(utils.train_data_size):
         row = []
         for j in range(len(x)):
-            row.append(x[j][i])
+            if np.isnan(x[j][i]):
+                row.append(0)
+            else:
+                row.append(x[j][i])
         row.append(y[i])
         row.append(d[i])
         train_set.append(row[:])

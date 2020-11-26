@@ -5,6 +5,10 @@ import cv2
 import os
 import copy
 import const
+# import warnings
+import sys
+
+# warnings.filterwarings('error')
 
 path = os.path.dirname(os.path.realpath(__file__))
 chuck_size = 500
@@ -52,7 +56,7 @@ def load_model(selected):
         features.append([int(x) for x in model[i]])
     return [features, amount_of_say, theta_stars, reverse]
 
-def get_label_from_model(data, model):
+def get_label_from_model(data, sdata, model):
     features = model[0]
     amount_of_say = model[1]
     theta_stars = model[2]
@@ -60,7 +64,7 @@ def get_label_from_model(data, model):
 
     s = 0
     for i in range(len(features)):
-        value = get_feature_value(data, features[i])
+        value = get_feature_value(data, sdata, features[i])
         s += amount_of_say[i] * reverse[i] * np.sign(theta_stars[i] - value)
 
     return np.sign(s) 
@@ -122,13 +126,16 @@ def get_feature_value(data, sdata, feature):
         msblack = sblack/(w * h / 2)
         mswhite = swhite /(w * h / 2)
 
+        # print(mblack*mblack)
+        # print(msblack)
+
         try:
             nblack = black / np.sqrt(msblack - mblack * mblack)
             nwhite = white / np.sqrt(mswhite - mwhite * mwhite)
-        except ZeroDivisionError:
+        except RuntimeWarning:
             print( "divide by zero", feature)
-
-        value = nblack - nwhite
+        
+        value = nblack - nwhite        
 
     elif feature[0] == 2:
         if h%2 != 0:
@@ -148,7 +155,7 @@ def get_feature_value(data, sdata, feature):
         try:
             nblack = black / np.sqrt(msblack - mblack * mblack)
             nwhite = white / np.sqrt(mswhite - mwhite * mwhite)
-        except ZeroDivisionError:
+        except RuntimeWarning:
             print( "divide by zero", feature)
 
         value = nblack - nwhite
@@ -178,10 +185,10 @@ def get_feature_value(data, sdata, feature):
             nblack = black / np.sqrt(msblack - mblack * mblack)
             nwhite1 = white1 / np.sqrt(mswhite1 - mwhite1 * mwhite1)
             nwhite2 = white2 / np.sqrt(mswhite2 - mwhite2 * mwhite2)
-        except ZeroDivisionError:
+        except RuntimeWarning:
             print( "divide by zero", feature)
 
-        value = (nwhite1 + nwhite2) - nblack 
+        value = (nwhite1 + nwhite2) - nblack
     
     elif feature[0] == 4:
         if h%2 != 0 or w%2 != 0:
@@ -211,14 +218,18 @@ def get_feature_value(data, sdata, feature):
             nblack2 = black2 / np.sqrt(msblack2 - mblack2 * mblack2)
             nwhite1 = white1 / np.sqrt(mswhite1 - mwhite1 * mwhite1)
             nwhite2 = white2 / np.sqrt(mswhite2 - mwhite2 * mwhite2)
-        except ZeroDivisionError:
+        except RuntimeWarning:
             print( "divide by zero", feature)
-
+            
         value = (nblack1 + nblack2) - (nwhite1 + nwhite2)
+        
         # value = (white1+white2) - (black1 + black2)
         
     else:
         print('err')
+    
+    if np.isnan(value):
+        value = 0
 
     return value
 
