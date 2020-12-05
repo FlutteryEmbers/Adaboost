@@ -1,7 +1,7 @@
 #! /usr/bin/python
 import utils
 
-selected = 10
+selected = 5
 test_set_dir = './test_set/'
 test_data_size = 20043
 

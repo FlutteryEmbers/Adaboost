@@ -8,7 +8,7 @@ import const
 
 path = os.path.dirname(os.path.realpath(__file__))
 chuck_size = 500
-train_data_size = 2499
+train_data_size = 1000
 
 face_image_folder = ""
 no_face_image_folder = ""
@@ -112,7 +112,7 @@ def get_feature_value(data, feature):
             print('error in feature type 1')
         black = data[y+h][x+w] + data[y][x+int(w/2)] - data[y][x+w] - data[y+h][x+int(w/2)]
         white = data[y+h][x+int(w/2)] + data[y][x] - data[y+h][x] - data[y][x+int(w/2)]
-        value = black - white
+        value = (black - white)
 
     elif feature[0] == 2:
         if h%2 != 0:
@@ -124,9 +124,9 @@ def get_feature_value(data, feature):
     elif feature[0] == 3:
         if w%3 != 0:
             print('error in feature type 3')
-        black = data[y+h][x+int(2*w/3)] + data[y][x+int(w/3)] - data[y+h][x+int(w/3)] - data[y][x+int(2*w/3)]
-        white1 = data[y+h][x+int(w/3)] + data[y][x] - data[y+h][x] - data[y][x+int(w/3)]
-        white2 = data[y+h][x+w] + data[y][x+int(2*w/3)] - data[y][x+w] - data[y+h][x+int(2*w/3)]
+        black = data[x+int(2*w/3)][y+h] + data[x+int(w/3)][y] - data[x+int(w/3)][y+h] - data[x+int(2*w/3)][y]
+        white1 = data[x+int(w/3)][y+h] + data[x][y] - data[x][y+h] - data[x+int(w/3)][y]
+        white2 = data[x+w][y+h] + data[x+int(2*w/3)][y] - data[x+w][y] - data[x+int(2*w/3)][y+h]
         # value = black - (white1 + white2)
         value = (white1 + white2) - black 
     
@@ -142,7 +142,8 @@ def get_feature_value(data, feature):
         
     else:
         print('err')
-        
+    
+    value = value / data[18][18]
     return value
 
 def save_integral_image(imgFile, img_type, output):
