@@ -63,6 +63,7 @@ plt.xlim(0, 1)
 plt.ylim(0, 1)
 plt.xlabel('FPR')
 plt.ylabel('TPR')
+plt.title('ROC OF MODEL' + str(selected))
 plt.show()
 
 

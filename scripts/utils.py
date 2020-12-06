@@ -11,7 +11,7 @@ chuck_size = 500
 train_data_size = 2499
 # train_data_size = 800
 
-train_rounds = 10
+train_rounds = 1
 
 face_image_folder = ""
 no_face_image_folder = ""
