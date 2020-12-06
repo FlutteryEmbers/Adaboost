@@ -79,7 +79,7 @@ def get_label_from_model_with_threshold(data, model, threshold):
         value = get_feature_value(data, features[i])
         s += amount_of_say[i] * reverse[i] * np.sign(theta_stars[i] - value)
 
-    return np.sign(s - threshold)
+    return np.sign(s- threshold)
 
 def showfeature(num):
     features = load_csv('features.csv')

@@ -15,8 +15,10 @@ model = utils.load_model(selected)
 print("mode:", str(selected))
 
 def get_test_error(threshold):
-    positive = 0
-    negative = 0
+    TP = 0
+    TN = 0
+    FP = 0
+    FN = 0
 
     for i in range(test_data_size):
         data = utils.load_csv(test_set_dir + str(i) + ".csv")
@@ -24,25 +26,46 @@ def get_test_error(threshold):
 
         if label == 1:
             if data[19][0] == 1:
-                positive += 1
-            if data[19][0] == -1:
-                negative += 1
+                TP += 1
+            elif data[19][0] == -1:
+                FP += 1
+            else:
+                print('1 error')
+        elif label == -1:
+            if data[19][0] == 1:
+                FN += 1
+            elif data[19][0] == -1:
+                TN += 1
+            else:
+                print('1 error')
+        else:
+            print(label) 
 
-    TPR = positive / const.NUM_TEST_FACE_IMAGE
-    FPR = negative / const.NUM_TEST_NON_FACE_IMAGE
+    TPR = TP / (TP + FN)
+    FPR = FP / (FP + TN)
 
     return TPR, FPR
 
 TPRs = []
 FPRs = []
-for i in range(0, 11):
-    threshold = 0.1 * i
+for i in range(-100, 100):
+    threshold = i
     TPR, FPR = get_test_error(threshold)
     TPRs.append(TPR)
     FPRs.append(FPR)
 
+# print(TPRs)
+# print(FPRs)
+
 plt.plot(FPRs, TPRs, 'xr-')
+plt.axis('equal')
+plt.xlim(0, 1)
+plt.ylim(0, 1)
+plt.xlabel('FPR')
+plt.ylabel('TPR')
 plt.show()
+
+
 
 
 
