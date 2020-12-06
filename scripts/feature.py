@@ -40,7 +40,6 @@ for x in range(0, 19):
                 if w % 2 == 0 and h % 2 == 0 and (x + w) < 19 and (y + h) < 19:
                     features.append([4, w, h, x, y])
 
-
 print(len(features))
 # print(features)
 '''

@@ -15,3 +15,4 @@ cd ..
 python3 ./scripts/integral_testset_image.py
 python3 ./scripts/integral_trainset_image.py
 python3 ./scripts/feature.py
+python3 ./scripts/extract_feature.py

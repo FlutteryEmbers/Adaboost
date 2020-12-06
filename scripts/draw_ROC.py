@@ -48,7 +48,7 @@ def get_test_error(threshold):
 
 TPRs = []
 FPRs = []
-for i in range(-100, 100):
+for i in range(-50, 50):
     threshold = i
     TPR, FPR = get_test_error(threshold)
     TPRs.append(TPR)

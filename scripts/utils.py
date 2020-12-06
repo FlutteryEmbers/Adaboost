@@ -159,7 +159,7 @@ def get_feature_value(data, feature):
     else:
         print('err')
     
-    value = value / data[18][18]
+    # value = value / data[18][18]
     return value
 
 def save_integral_image(imgFile, img_type, output):
