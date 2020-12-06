@@ -8,7 +8,10 @@ import const
 
 path = os.path.dirname(os.path.realpath(__file__))
 chuck_size = 500
-train_data_size = 1000
+train_data_size = 2499
+# train_data_size = 800
+
+train_rounds = 10
 
 face_image_folder = ""
 no_face_image_folder = ""
@@ -63,7 +66,20 @@ def get_label_from_model(data, model):
         value = get_feature_value(data, features[i])
         s += amount_of_say[i] * reverse[i] * np.sign(theta_stars[i] - value)
 
-    return np.sign(s) 
+    return np.sign(s)
+
+def get_label_from_model_with_threshold(data, model, threshold):
+    features = model[0]
+    amount_of_say = model[1]
+    theta_stars = model[2]
+    reverse = model[3]
+
+    s = 0
+    for i in range(len(features)):
+        value = get_feature_value(data, features[i])
+        s += amount_of_say[i] * reverse[i] * np.sign(theta_stars[i] - value)
+
+    return np.sign(s - threshold)
 
 def showfeature(num):
     features = load_csv('features.csv')
@@ -124,9 +140,9 @@ def get_feature_value(data, feature):
     elif feature[0] == 3:
         if w%3 != 0:
             print('error in feature type 3')
-        black = data[x+int(2*w/3)][y+h] + data[x+int(w/3)][y] - data[x+int(w/3)][y+h] - data[x+int(2*w/3)][y]
-        white1 = data[x+int(w/3)][y+h] + data[x][y] - data[x][y+h] - data[x+int(w/3)][y]
-        white2 = data[x+w][y+h] + data[x+int(2*w/3)][y] - data[x+w][y] - data[x+int(2*w/3)][y+h]
+        black = data[y+h][x+int(2*w/3)] + data[y][x+int(w/3)] - data[y+h][x+int(w/3)] - data[y][x+int(2*w/3)]
+        white1 = data[y+h][x+int(w/3)] + data[y][x] - data[y+h][x] - data[y][x+int(w/3)]
+        white2 = data[y+h][x+w] + data[y][x+int(2*w/3)] - data[y][x+w] - data[y+h][x+int(2*w/3)]
         # value = black - (white1 + white2)
         value = (white1 + white2) - black 
     

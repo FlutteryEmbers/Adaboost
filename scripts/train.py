@@ -5,7 +5,7 @@ import copy
 import math
 import numpy as np
 
-rounds = 5
+rounds = utils.train_rounds
 datasize = 2499
 
 input_folder = utils.path + '/../train_set/feature/'
@@ -141,7 +141,7 @@ def update_weights(theta_star, j_star, reverse, dist):
     return a, normalized_weights
 
 def load_train_set(index, y, d):
-    x = utils.load_csv(utils.path + "/../train_set/feature/" + str(index) + ".csv")
+    x = utils.load_csv_float(utils.path + "/../train_set/feature/" + str(index) + ".csv")
     train_set = []
     for i in range(utils.train_data_size):
         row = []

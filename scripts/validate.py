@@ -1,7 +1,7 @@
 #! /usr/bin/python
 import utils
 
-selected = 5
+selected = utils.train_rounds
 test_set_dir = './test_set/'
 test_data_size = 20043
 
